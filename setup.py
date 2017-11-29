@@ -100,17 +100,20 @@ class Test(Command):
 
 if __name__ == '__main__':
 	setup(
-		name='Telebot',
+		name='Manabot',
 		version='1.0',
-		description='Security Telegram bot for small servers',
+		description='Intracorporate management servers',
 		author='Andrey Valyaev',
 		author_email='dron.valyaev@gmail.com',
-		url='https://github.com/DronMDF/telebot',
+		url='https://github.com/DronMDF/manabot',
 		packages=['tb', 'tb.sources', 'tb.storage'],
 		data_files=[
-			('/etc/init', ['telebot.conf']),
-			('/lib/systemd/system', ['telebot.service']),
-			('/usr/bin', ['telebot'])
+			# @todo #2 В файле manabot.conf должен содержаться пример конфигурации.
+			#  А этот файл видимо должен называться manabot.init и переименовываться при
+			#  инсталляции
+			('/etc/init', ['manabot.conf']),
+			('/lib/systemd/system', ['manabot.service']),
+			('/usr/bin', ['manabot'])
 		],
 		cmdclass={'style': Style, 'test': Test}
 	)
