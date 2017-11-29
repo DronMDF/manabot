@@ -1,4 +1,4 @@
-# telebot
+# manabot
 
 Install server and enjoy kitten :3
 

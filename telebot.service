@@ -1,12 +1,12 @@
 [Unit]
-Description=Telebot
+Description=Manabot
 After=network.target
 
 [Service]
 Type=forking
-PIDFile=/var/run/telebot.pid
-ExecStart=/sbin/start-stop-daemon -S -b -mp /var/run/telebot.pid -d /var/cache/telebot -a /usr/bin/telebot
-ExecStop=/sbin/start-stop-daemon -K -p /var/run/telebot.pid
+PIDFile=/var/run/manabot.pid
+ExecStart=/sbin/start-stop-daemon -S -b -mp /var/run/manabot.pid -d /var/cache/manabot -a /usr/bin/manabot
+ExecStop=/sbin/start-stop-daemon -K -p /var/run/manabot.pid
 Restart=always
 
 [Install]

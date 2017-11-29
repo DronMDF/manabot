@@ -10,7 +10,7 @@ app = Application(
 			ConfigFile(
 				ConfigFromArgs(
 					sys.argv,
-					ConfigDefault({'config': '/etc/telebot.conf'})
+					ConfigDefault({'config': '/etc/manabot.conf'})
 				)
 			),
 			ConfigDefault({})
