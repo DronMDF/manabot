@@ -1,6 +1,8 @@
 from time import sleep
 from .sources import (
 	ReactionEcho,
+	SoJoin,
+	SoNewReview,
 	SoSafe,
 	SoTelegram,
 	TelegramBot,
@@ -13,12 +15,15 @@ class Application:
 	def __init__(self, config):
 		telegram_db = TinyDataBase('telegram.json')
 		self.source = SoSafe(
-			SoTelegram(
-				TelegramBot(
-					config,
-					TelegramOffsetFromDb(telegram_db)
+			SoJoin(
+				SoTelegram(
+					TelegramBot(
+						config,
+						TelegramOffsetFromDb(telegram_db)
+					),
+					ReactionEcho()
 				),
-				ReactionEcho()
+				SoNewReview()
 			)
 		)
 		self.storage = StDispatch(

@@ -1,5 +1,6 @@
-import itertools
-import traceback
+from itertools import chain
+from unittest import TestCase
+from traceback import print_exc
 
 
 class SoJoin:
@@ -7,14 +8,24 @@ class SoJoin:
 		self.sources = sources
 
 	def actions(self):
-		return list[itertools.chain(s.actions() for s in self.sources)]
+		return list(chain.from_iterable((s.actions() for s in self.sources)))
 
 
-class SoJoinTest:
-	# @todo #48 Что-то я немного сомневаюсь, что SoJoin работает корректно.
-	#  И это удобное место, чтобы попробовать написать тест.
-	#  Примеры оформления тестов можно посмотреть в других файлах.
-	pass
+class SoFake:
+	def __init__(self, result):
+		self.result = result
+
+	def actions(self):
+		return self.result
+
+
+class SoJoinTest(TestCase):
+	def testJoin(self):
+		so = SoJoin(
+			SoFake([1, 2, 3]),
+			SoFake([4, 5, 6])
+		)
+		self.assertListEqual(so.actions(), [1, 2, 3, 4, 5, 6])
 
 
 class SoSafe:
@@ -25,7 +36,7 @@ class SoSafe:
 		try:
 			return self.source.actions()
 		except Exception:
-			traceback.print_exc()
+			print_exc()
 			# @todo #58 Из текста исключения необходимо
 			#  сформировать сообщение для администратора
 			return []
