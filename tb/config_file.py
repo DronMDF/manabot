@@ -1,5 +1,6 @@
 from configparser import ConfigParser, NoOptionError, NoSectionError
 from unittest import TestCase
+from .config_default import ConfigDefault
 
 
 class ConfigFile:

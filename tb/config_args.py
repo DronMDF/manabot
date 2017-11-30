@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 from unittest import TestCase
+from .config_default import ConfigDefault
 
 
 class ConfigFromArgs(object):
