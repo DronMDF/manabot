@@ -2,6 +2,7 @@ codecov
 coverage
 psutil
 pycodestyle
+pygerrit2
 pylint
 python-telegram-bot
 radon
