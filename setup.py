@@ -33,16 +33,16 @@ class Style(Command):
 			for r in ccr[1]:
 				''' Не допускается Cyclomatic Complexity больше 5 '''
 				if r.complexity > 5:
-					print('%s: %s' % (ccr[0], r))
+					print('%s: High cyclomatic complexity - %s' % (ccr[0], r))
 					result = False
 		return result
 
 	def radon_mi(self, f, config):
 		result = True
 		for mir in MIHarvester([f], config).results:
-			''' Не допускается Maintainability Index ниже 30% '''
-			if mir[1]['mi'] < 30:
-				print('%s: %u%%' % (mir[0], mir[1]['mi']))
+			''' Не допускается Maintainability Index ниже 50% '''
+			if mir[1]['mi'] < 50:
+				print('%s: Low maintainability index - %u%%' % (mir[0], mir[1]['mi']))
 				result = False
 		return result
 
