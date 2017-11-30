@@ -23,7 +23,7 @@ class Application:
 					),
 					ReactionEcho()
 				),
-				SoNewReview()
+				SoNewReview(config)
 			)
 		)
 		self.storage = StDispatch(
