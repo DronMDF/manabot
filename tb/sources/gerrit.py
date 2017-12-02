@@ -3,9 +3,26 @@ from requests.auth import HTTPDigestAuth
 from unittest import TestCase
 from tb.storage import TinyDataBase
 
-# @todo #1 Формат Action для создания новых ревью в БД
-#  Новый ревью должен создаваться неинициализированным,
-#  чтобы попасть под очередной анализ
+
+class AcNewReview:
+	def __init__(self, id):
+		self.id = id
+
+	def send(self, transport):
+		pass
+
+	def save(self, db):
+		# @todo #12 Хранилище у нас абстрактное и не знает,
+		#  что эту информацию нужно класть в БД геррита.
+		#  Может быть нам сделать некий токен первым параметром у insert и у set?
+		#  Или наоборот, пусть БД представляется, когда сейвит action? Это проще.
+		db.insert({
+			'id': self.id,
+			'verify': None,
+			'review': None,
+			'revision': None
+		})
+		print('GERRIT: New review', self.id)
 
 
 class ReviewUnderControl:
@@ -55,7 +72,10 @@ class SoNewReview:
 			self.remote_ids = ReviewOnServer(kwargs.get('config'))
 
 	def actions(self):
-		return set(self.remote_ids) - set(self.controlled_ids)
+		return [
+			AcNewReview(id)
+			for id in set(self.remote_ids) - set(self.controlled_ids)
+		]
 
 
 class SoNewReviewTest(TestCase):
