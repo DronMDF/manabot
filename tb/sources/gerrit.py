@@ -72,7 +72,10 @@ class SoNewReview:
 			self.remote_ids = ReviewOnServer(kwargs.get('config'))
 
 	def actions(self):
-		return [AcNewReview(id) for id in set(self.remote_ids) - set(self.controlled_ids)]
+		return [
+			AcNewReview(id)
+			for id in set(self.remote_ids) - set(self.controlled_ids)
+		]
 
 
 class SoNewReviewTest(TestCase):
