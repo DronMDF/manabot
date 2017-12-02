@@ -57,3 +57,18 @@ class ConfigFromFileTest(TestCase):
 			ConfigDefault({'section.key': 'value'})
 		)
 		self.assertEqual(config.value('section.key'), 'value')
+
+	def testFileWithTwoGroups(self):
+		config = ConfigFromFile(
+			ConfigString(
+				'\n'.join((
+					'[telegram]',
+					'token = token',
+					'[gerrit]',
+					'url = http://gerrit.com',
+					'db = gerrit.json'
+				))
+			),
+			ConfigDefault({})
+		)
+		self.assertEqual(config.value('gerrit.db'), 'gerrit.json')
