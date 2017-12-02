@@ -15,3 +15,6 @@ class TinyDataBase:
 		if item is not None:
 			return item.get('value', default)
 		return default
+
+	def all(self):
+		return TinyDB(self.filename).all()

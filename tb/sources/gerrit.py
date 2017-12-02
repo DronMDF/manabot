@@ -1,5 +1,5 @@
 from pygerrit2.rest import GerritRestAPI
-from requests.auth import HTTPBasicAuth
+from requests.auth import HTTPDigestAuth
 from unittest import TestCase
 from tb.storage import TinyDataBase
 
@@ -12,22 +12,29 @@ class ReviewUnderControl:
 	def __init__(self, db):
 		self.db = db
 
-	def __next__(self):
-		return (i['id'] for i in db.all())
+	def __iter__(self):
+		return (i['id'] for i in self.db.all())
 
 
 class ReviewOnServer:
 	def __init__(self, config):
 		self.config = config
 
-	def __next__(self):
+	def __iter__(self):
+		# @todo #18 Возможно мы можем написать декоратор для Auth
+		#  Потому что у меня возникло желание вынести это в функцию,
+		#  что не правильно.
+		if self.config.value('gerrit.auth') == 'digest':
+			auth = HTTPDigestAuth(
+				self.config.value('gerrit.user'),
+				self.config.value('gerrit.password')
+			)
+		else:
+			auth = None
 		return (
 			i['id'] for i in GerritRestAPI(
 				url=self.config.value('gerrit.url'),
-				auth=HTTPDigestAuth(
-					self.config.value('gerrit.user'),
-					self.config.value('gerrit.password')
-				)
+				auth=auth
 			).get('/changes/')
 		)
 
@@ -48,10 +55,7 @@ class SoNewReview:
 			self.remote_ids = ReviewOnServer(kwargs.get('config'))
 
 	def actions(self):
-		# @todo #13 Найти на сервере (self.remote_ids) что-то такое,
-		#  чего нет в списке контролируемых. (self.controlled_ids)
-		#  И на эти ревью создать Action
-		return self.remote_ids		# Это грязный хак временно
+		return set(self.remote_ids) - set(self.controlled_ids)
 
 
 class SoNewReviewTest(TestCase):
@@ -60,5 +64,5 @@ class SoNewReviewTest(TestCase):
 		self.assertEqual(len(so.actions()), 3)
 
 	def testNewWithExists(self):
-		# @todo #13 Написать тест на создание элементов, если в базе что-то есть
-		pass
+		so = SoNewReview(controlled_ids=[1, 2], remote_ids=[1, 2, 3])
+		self.assertEqual(len(so.actions()), 1)
