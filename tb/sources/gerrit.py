@@ -48,10 +48,7 @@ class SoNewReview:
 			self.remote_ids = ReviewOnServer(kwargs.get('config'))
 
 	def actions(self):
-		# @todo #13 Найти на сервере (self.remote_ids) что-то такое,
-		#  чего нет в списке контролируемых. (self.controlled_ids)
-		#  И на эти ревью создать Action
-		return self.remote_ids		# Это грязный хак временно
+		return set(self.remote_ids) - set(self.controlled_ids)
 
 
 class SoNewReviewTest(TestCase):
@@ -60,5 +57,5 @@ class SoNewReviewTest(TestCase):
 		self.assertEqual(len(so.actions()), 3)
 
 	def testNewWithExists(self):
-		# @todo #13 Написать тест на создание элементов, если в базе что-то есть
-		pass
+		so = SoNewReview(controlled_ids=[1, 2], remote_ids=[1, 2, 3])
+		self.assertEqual(len(so.actions()), 1)
