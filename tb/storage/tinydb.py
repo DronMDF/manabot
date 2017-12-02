@@ -6,8 +6,10 @@ class TinyDataBase:
 		self.filename = filename
 
 	def set(self, name, value):
-		db = TinyDB(self.filename)
-		db.upsert({'name': name, 'value': value}, where('name') == name)
+		TinyDB(self.filename).upsert(
+			{'name': name, 'value': value},
+			where('name') == name
+		)
 
 	def get(self, name, default=None):
 		db = TinyDB(self.filename)
@@ -15,6 +17,9 @@ class TinyDataBase:
 		if item is not None:
 			return item.get('value', default)
 		return default
+
+	def insert(self, json):
+		TinyDB(self.filename).insert(json)
 
 	def all(self):
 		return TinyDB(self.filename).all()
