@@ -19,7 +19,12 @@ class Application:
 		)
 		self.storage = StDispatch(
 			StTelegram(config),
-			StDbTelegramOffset(TinyDataBase(config.value('telegram.db')))
+			StDatabase(
+				TinySelect({
+					'telegram': TinyDataBase(config.value('telegram.db')),
+					'gerrit': TinyDataBase(config.value('gerrit.db'))
+				})
+			)
 		)
 
 	def run(self):
