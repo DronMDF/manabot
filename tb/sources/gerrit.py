@@ -12,16 +12,12 @@ class AcNewReview:
 		pass
 
 	def save(self, db):
-		# @todo #12 Хранилище у нас абстрактное и не знает,
-		#  что эту информацию нужно класть в БД геррита.
-		#  Может быть нам сделать некий токен первым параметром у insert и у set?
-		#  Или наоборот, пусть БД представляется, когда сейвит action? Это проще.
 		db.insert({
 			'id': self.id,
 			'verify': None,
 			'review': None,
 			'revision': None
-		})
+		}, 'gerrit')
 		print('GERRIT: New review', self.id)
 
 

@@ -1,6 +1,17 @@
 from tinydb import TinyDB, where
 
 
+class TinySelect:
+	def __init__(self, databases):
+		self.databases = databases
+
+	def set(self, name, value, database):
+		self.databases[database].set(name, value)
+
+	def insert(self, json, database):
+		self.databases[database].insert(json)
+
+
 class TinyDataBase:
 	def __init__(self, filename):
 		self.filename = filename

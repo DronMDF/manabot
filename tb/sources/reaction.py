@@ -3,7 +3,7 @@ class AcTelegramUpdate:
 		self.update = update
 
 	def save(self, db):
-		db.set('update_id', self.update.update_id)
+		db.set('update_id', self.update.update_id, 'telegram')
 
 	def send(self, transport):
 		transport.sendMessage(

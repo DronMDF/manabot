@@ -1,3 +1,4 @@
-from .telegram import StTelegram, StDbTelegramOffset
-from .tinydb import TinyDataBase
+from .database import *
+from .telegram import StTelegram
+from .tinydb import *
 from .utility import StDispatch
