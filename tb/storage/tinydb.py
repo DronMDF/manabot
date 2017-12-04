@@ -11,6 +11,9 @@ class TinySelect:
 	def insert(self, json, database):
 		self.databases[database].insert(json)
 
+	def delete(self, id, database):
+		self.databases[database].delete(id)
+
 
 class TinyDataBase:
 	def __init__(self, filename):
@@ -34,3 +37,6 @@ class TinyDataBase:
 
 	def all(self):
 		return TinyDB(self.filename).all()
+
+	def delete(self, id):
+		TinyDB(self.filename).remove(where('id') == id)

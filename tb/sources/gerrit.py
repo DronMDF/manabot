@@ -82,3 +82,49 @@ class SoNewReviewTest(TestCase):
 	def testNewWithExists(self):
 		so = SoNewReview(controlled_ids=[1, 2], remote_ids=[1, 2, 3])
 		self.assertEqual(len(so.actions()), 1)
+
+
+class AcOutReview:
+	def __init__(self, id):
+		self.id = id
+
+	def send(self, transport):
+		pass
+
+	def save(self, db):
+		db.delete(self.id, 'gerrit')
+		print('GERRIT: Out review', self.id)
+
+
+class SoOutReview:
+	def __init__(self, **kwargs):
+		# @todo #30 Этот код стал слишком толстым...
+		#  Вероятно надо его выносить из конструкторов,
+		#  и передавать сюда конкретную зависимость.
+		#  В пользу такого подхода говорит еще то,
+		#  что геррит должен уйти в место,
+		#  доступное другим компонентам, помимо sources.
+		if 'controlled_ids' in kwargs:
+			self.controlled_ids = kwargs['controlled_ids']
+		else:
+			self.controlled_ids = ReviewUnderControl(
+				TinyDataBase(
+					kwargs.get('config').value('gerrit.db')
+				)
+			)
+		if 'remote_ids' in kwargs:
+			self.remote_ids = kwargs['remote_ids']
+		else:
+			self.remote_ids = ReviewOnServer(kwargs.get('config'))
+
+	def actions(self):
+		return [
+			AcOutReview(id)
+			for id in set(self.controlled_ids) - set(self.remote_ids)
+		]
+
+
+class SoOutReviewTest(TestCase):
+	def testOut(self):
+		so = SoOutReview(controlled_ids=[1, 2, 3], remote_ids=[2, 3, 4])
+		self.assertEqual(len(so.actions()), 1)
