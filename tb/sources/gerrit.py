@@ -98,6 +98,12 @@ class AcOutReview:
 
 class SoOutReview:
 	def __init__(self, **kwargs):
+		# @todo #30 Этот код стал слишком толстым...
+		#  Вероятно надо его выносить из конструкторов,
+		#  и передавать сюда конкретную зависимость.
+		#  В пользу такого подхода говорит еще то,
+		#  что геррит должен уйти в место,
+		#  доступное другим компонентам, помимо sources.
 		if 'controlled_ids' in kwargs:
 			self.controlled_ids = kwargs['controlled_ids']
 		else:
