@@ -53,19 +53,9 @@ class ReviewOnServer:
 
 
 class SoNewReview:
-	def __init__(self, **kwargs):
-		if 'controlled_ids' in kwargs:
-			self.controlled_ids = kwargs['controlled_ids']
-		else:
-			self.controlled_ids = ReviewUnderControl(
-				TinyDataBase(
-					kwargs.get('config').value('gerrit.db')
-				)
-			)
-		if 'remote_ids' in kwargs:
-			self.remote_ids = kwargs['remote_ids']
-		else:
-			self.remote_ids = ReviewOnServer(kwargs.get('config'))
+	def __init__(self, controlled_ids, remote_ids):
+		self.controlled_ids = controlled_ids
+		self.remote_ids = remote_ids
 
 	def actions(self):
 		return [
@@ -97,25 +87,9 @@ class AcOutReview:
 
 
 class SoOutReview:
-	def __init__(self, **kwargs):
-		# @todo #30 Этот код стал слишком толстым...
-		#  Вероятно надо его выносить из конструкторов,
-		#  и передавать сюда конкретную зависимость.
-		#  В пользу такого подхода говорит еще то,
-		#  что геррит должен уйти в место,
-		#  доступное другим компонентам, помимо sources.
-		if 'controlled_ids' in kwargs:
-			self.controlled_ids = kwargs['controlled_ids']
-		else:
-			self.controlled_ids = ReviewUnderControl(
-				TinyDataBase(
-					kwargs.get('config').value('gerrit.db')
-				)
-			)
-		if 'remote_ids' in kwargs:
-			self.remote_ids = kwargs['remote_ids']
-		else:
-			self.remote_ids = ReviewOnServer(kwargs.get('config'))
+	def __init__(self, controlled_ids, remote_ids):
+		self.controlled_ids = controlled_ids
+		self.remote_ids = remote_ids
 
 	def actions(self):
 		return [
