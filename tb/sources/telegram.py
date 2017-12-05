@@ -18,8 +18,19 @@ class TelegramBot:
 
 	def getUpdates(self):
 		bot = telegram.Bot(self.config.value("telegram.token"))
-		update = bot.getUpdates(offset=self.offset.value())
-		return update
+		return bot.getUpdates(offset=self.offset.value())
+
+
+class SoNoTelegramTimeout:
+	def __init__(self, source):
+		self.source = source
+
+	def actions(self):
+		try:
+			actions = self.source.actions()
+		except telegram.error.TimedOut:
+			actions = []
+		return actions
 
 
 class SoTelegram:

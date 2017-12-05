@@ -7,12 +7,14 @@ class Application:
 	def __init__(self, config):
 		self.source = SoSafe(
 			SoJoin(
-				SoTelegram(
-					TelegramBot(
-						config,
-						TelegramOffsetFromDb(TinyDataBase(config.value('telegram.db')))
-					),
-					ReactionEcho()
+				SoNoTelegramTimeout(
+					SoTelegram(
+						TelegramBot(
+							config,
+							TelegramOffsetFromDb(TinyDataBase(config.value('telegram.db')))
+						),
+						ReactionEcho()
+					)
 				),
 				SoNewReview(config=config),
 				SoOutReview(config=config)
