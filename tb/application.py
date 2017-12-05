@@ -16,8 +16,14 @@ class Application:
 						ReactionEcho()
 					)
 				),
-				SoNewReview(config=config),
-				SoOutReview(config=config)
+				SoNewReview(
+					ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
+					ReviewOnServer(config)
+				),
+				SoOutReview(
+					ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
+					ReviewOnServer(config)
+				)
 			)
 		)
 		self.storage = StDispatch(
