@@ -17,12 +17,16 @@ class Application:
 					)
 				),
 				SoNewReview(
-					ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
-					ReviewOnServer(config)
+					ReviewIds(ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))),
+					ReviewIds(ReviewOnServer(config))
 				),
 				SoOutReview(
-					ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
-					ReviewOnServer(config)
+					ReviewIds(ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))),
+					ReviewIds(ReviewOnServer(config))
+				),
+				SoVerifiedReview(
+					ReviewOnServer(config),
+					ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
 				)
 			)
 		)

@@ -4,29 +4,25 @@ from unittest import TestCase
 from tb.storage import TinyDataBase
 
 
-class AcNewReview:
-	def __init__(self, id):
-		self.id = id
-
-	def send(self, transport):
-		pass
-
-	def save(self, db):
-		db.insert({
-			'id': self.id,
-			'verify': None,
-			'review': None,
-			'revision': None
-		}, 'gerrit')
-		print('GERRIT: New review', self.id)
-
-
 class ReviewUnderControl:
 	def __init__(self, db):
 		self.db = db
 
 	def __iter__(self):
-		return (i['id'] for i in self.db.all())
+		return iter(self.db.all())
+
+
+class GerritReview:
+	def __init__(self, change):
+		self.change = change
+
+	def __getitem__(self, key):
+		if key == 'verify':
+			return 'approved' in self.change.get('labels', {}).get('Verified', {})
+		elif key == 'revision':
+			return self.change['current_revision']
+		else:
+			return self.change[key]
 
 
 class ReviewOnServer:
@@ -45,11 +41,37 @@ class ReviewOnServer:
 		else:
 			auth = None
 		return (
-			i['id'] for i in GerritRestAPI(
+			GerritReview(i)
+			for i in GerritRestAPI(
 				url=self.config.value('gerrit.url'),
 				auth=auth
-			).get('/changes/')
+			).get('/changes/?o=LABELS&o=CURRENT_REVISION')
 		)
+
+
+class ReviewIds:
+	def __init__(self, reviews):
+		self.reviews = reviews
+
+	def __iter__(self):
+		return (i['id'] for i in self.reviews)
+
+
+class AcNewReview:
+	def __init__(self, id):
+		self.id = id
+
+	def send(self, transport):
+		pass
+
+	def save(self, db):
+		db.insert({
+			'id': self.id,
+			'verify': None,
+			'review': None,
+			'revision': None
+		}, 'gerrit')
+		print('GERRIT: New review', self.id)
 
 
 class SoNewReview:
@@ -102,3 +124,51 @@ class SoOutReviewTest(TestCase):
 	def testOut(self):
 		so = SoOutReview(controlled_ids=[1, 2, 3], remote_ids=[2, 3, 4])
 		self.assertEqual(len(so.actions()), 1)
+
+
+class AcVerifiedReview:
+	def __init__(self, review):
+		self.review = review
+
+	def send(self, transport):
+		# @todo #31 Нужно уведомить меня о том, что появился ревью,
+		#  достойный моего внимания. Но я пока не придумал как подсунуть
+		#  сюда информацию из конфигурации. Нам нужно имя PO
+		pass
+
+	def save(self, db):
+		db.update(
+			self.review['id'],
+			{
+				'revision': self.review['revision'],
+				'verify': self.review['verify']
+			},
+			'gerrit'
+		)
+		print(
+			'GERRIT: Update review %s, (%s, %s)' % (
+				self.review['id'],
+				self.review['revision'][:7],
+				self.review['verify']
+			)
+		)
+
+
+class SoVerifiedReview:
+	def __init__(self, verified, controlled):
+		self.verified = verified
+		self.controlled = controlled
+
+	def needUpdate(self, review):
+		local = next((l for l in self.controlled if l['id'] == review['id']), None)
+		return local is not None and not all((
+			local['revision'] == review['revision'],
+			local['verify'] == review['verify']
+		))
+
+	def actions(self):
+		return [
+			AcVerifiedReview(v)
+			for v in self.verified
+			if self.needUpdate(v)
+		]
