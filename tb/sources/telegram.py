@@ -33,6 +33,10 @@ class SoNoTelegramTimeout:
 		return actions
 
 
+# @todo #38 Нужно сделать класс,
+#  который будет игнорировать таймауты в этом классе.
+#  Там возникает исключение telegram.error.TimedOut
+
 class SoTelegram:
 	def __init__(self, bot, reaction):
 		self.bot = bot
