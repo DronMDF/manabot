@@ -24,10 +24,9 @@ class Application:
 					ReviewIds(ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))),
 					ReviewIds(ReviewOnServer(config))
 				),
-				SoVerifiedReview(
+				SoUpdateReview(
 					ReviewOnServer(config),
-					ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
-					config.value('telegram.chat_id')
+					ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
 				)
 			)
 		)
