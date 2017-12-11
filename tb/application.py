@@ -26,7 +26,18 @@ class Application:
 				),
 				SoUpdateReview(
 					ReviewOnServer(config),
-					ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+					ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
+				),
+				SoReviewForAdmin(
+					ReviewIsNeed(
+						ReviewOne(
+							ReviewVerified(
+								ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+							)
+						),
+						AdminReview(TinyDataBase(config.value('admin.db')))
+					),
+					config.value('telegram.chat_id')
 				)
 			)
 		)
@@ -35,7 +46,8 @@ class Application:
 			StDatabase(
 				TinySelect({
 					'telegram': TinyDataBase(config.value('telegram.db')),
-					'gerrit': TinyDataBase(config.value('gerrit.db'))
+					'gerrit': TinyDataBase(config.value('gerrit.db')),
+					'admin': TinyDataBase(config.value('admin.db'))
 				})
 			)
 		)

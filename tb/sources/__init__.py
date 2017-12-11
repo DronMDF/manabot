@@ -1,3 +1,4 @@
+from .admin import *
 from .cpu import SoCPU
 from .gerrit import *
 from .hdd import SoHDD
