@@ -4,14 +4,6 @@ from unittest import TestCase
 from tb.storage import TinyDataBase
 
 
-class ReviewUnderControl:
-	def __init__(self, db):
-		self.db = db
-
-	def __iter__(self):
-		return iter(self.db.all())
-
-
 class GerritReview:
 	def __init__(self, change):
 		self.change = change
@@ -47,14 +39,6 @@ class ReviewOnServer:
 				auth=auth
 			).get('/changes/?o=LABELS&o=CURRENT_REVISION')
 		)
-
-
-class ReviewIds:
-	def __init__(self, reviews):
-		self.reviews = reviews
-
-	def __iter__(self):
-		return (i['id'] for i in self.reviews)
 
 
 class AcNewReview:
@@ -126,26 +110,12 @@ class SoOutReviewTest(TestCase):
 		self.assertEqual(len(so.actions()), 1)
 
 
-class AcVerifiedReview:
-	def __init__(self, chat_id, review):
-		self.chat_id = chat_id
+class AcUpdateReview:
+	def __init__(self, review):
 		self.review = review
 
 	def send(self, transport):
-		# @todo #38 Нет необходимости на каждое изменение слать уведомления.
-		#  Нужно выбрать одно из них и начать диалог с овнером о том,
-		#  что с ним делать.
-		#  И пока овнер в диалоге - новых уведомлений не городить (таймаут)
-		#  И вероятно это должен быть отдельный соурс,
-		#  который будет работать постфактом
-		transport.sendMessage(
-			self.chat_id,
-			text='GERRIT: Update review %s, (%s, %s)' % (
-				self.review['id'],
-				self.review['revision'][:7],
-				self.review['verify']
-			)
-		)
+		pass
 
 	def save(self, db):
 		db.update(
@@ -165,11 +135,10 @@ class AcVerifiedReview:
 		)
 
 
-class SoVerifiedReview:
-	def __init__(self, verified, controlled, chat_id):
-		self.verified = verified
+class SoUpdateReview:
+	def __init__(self, remote, controlled):
+		self.remote = remote
 		self.controlled = controlled
-		self.chat_id = chat_id
 
 	def needUpdate(self, review):
 		local = next((l for l in self.controlled if l['id'] == review['id']), None)
@@ -179,8 +148,4 @@ class SoVerifiedReview:
 		))
 
 	def actions(self):
-		return [
-			AcVerifiedReview(self.chat_id, v)
-			for v in self.verified
-			if self.needUpdate(v)
-		]
+		return [AcUpdateReview(v) for v in self.remote if self.needUpdate(v)]

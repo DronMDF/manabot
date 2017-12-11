@@ -24,9 +24,22 @@ class Application:
 					ReviewIds(ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))),
 					ReviewIds(ReviewOnServer(config))
 				),
-				SoVerifiedReview(
+				SoUpdateReview(
 					ReviewOnServer(config),
 					ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
+				),
+				# @todo #40 Необходимо проверять, что ревью,
+				#  который назначен на админа все еще ждет его реакции.
+				#  Он может быть уже закрыт, или потерял статус верификации
+				SoReviewForAdmin(
+					ReviewIsNeed(
+						ReviewOne(
+							ReviewVerified(
+								ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+							)
+						),
+						AdminReview(TinyDataBase(config.value('admin.db')))
+					),
 					config.value('telegram.chat_id')
 				)
 			)
@@ -36,7 +49,8 @@ class Application:
 			StDatabase(
 				TinySelect({
 					'telegram': TinyDataBase(config.value('telegram.db')),
-					'gerrit': TinyDataBase(config.value('gerrit.db'))
+					'gerrit': TinyDataBase(config.value('gerrit.db')),
+					'admin': TinyDataBase(config.value('admin.db'))
 				})
 			)
 		)
