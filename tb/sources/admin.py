@@ -1,32 +1,3 @@
-
-class ReviewVerified:
-	def __init__(self, reviews):
-		self.reviews = reviews
-
-	def __iter__(self):
-		return (r for r in self.reviews if r['verify'])
-
-
-class ReviewOne:
-	def __init__(self, reviews):
-		self.reviews = reviews
-
-	def __iter__(self):
-		return iter([next(iter(self.reviews))])
-
-
-class ReviewIsNeed:
-	def __init__(self, reviews, current):
-		self.reviews = reviews
-		self.current = current
-
-	def __iter__(self):
-		if not self.current.active():
-			return iter(self.reviews)
-		else:
-			return iter([])
-
-
 class AdminReview:
 	def __init__(self, db):
 		self.db = db
@@ -41,6 +12,9 @@ class AcReviewForAdmin:
 		self.chat_id = chat_id
 
 	def send(self, transport):
+		# @todo #40 Нужно предоставить администратору основную информацию
+		#  title, коммит, патчсет, статус верификации и ревью.
+		#  И выдать список доступных действий в виде экранных кнопок.
 		transport.sendMessage(
 			self.chat_id,
 			text='GERRIT: Update review %s, (%s, %s)' % (

@@ -4,14 +4,6 @@ from unittest import TestCase
 from tb.storage import TinyDataBase
 
 
-class ReviewUnderControl:
-	def __init__(self, db):
-		self.db = db
-
-	def __iter__(self):
-		return iter(self.db.all())
-
-
 class GerritReview:
 	def __init__(self, change):
 		self.change = change
@@ -47,14 +39,6 @@ class ReviewOnServer:
 				auth=auth
 			).get('/changes/?o=LABELS&o=CURRENT_REVISION')
 		)
-
-
-class ReviewIds:
-	def __init__(self, reviews):
-		self.reviews = reviews
-
-	def __iter__(self):
-		return (i['id'] for i in self.reviews)
 
 
 class AcNewReview:
@@ -164,8 +148,4 @@ class SoUpdateReview:
 		))
 
 	def actions(self):
-		return [
-			AcUpdateReview(v)
-			for v in self.remote
-			if self.needUpdate(v)
-		]
+		return [AcUpdateReview(v) for v in self.remote if self.needUpdate(v)]
