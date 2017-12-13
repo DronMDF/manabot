@@ -28,9 +28,17 @@ class Application:
 					ReviewOnServer(config),
 					ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
 				),
-				# @todo #40 Необходимо проверять, что ревью,
-				#  который назначен на админа все еще ждет его реакции.
-				#  Он может быть уже закрыт, или потерял статус верификации
+				SoAdminReviewIsOut(
+					ReviewIsOut(
+						AdminReview(TinyDataBase(config.value('admin.db'))),
+						ReviewIds(
+							ReviewVerified(
+								ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+							)
+						)
+					),
+					config.value('telegram.chat_id')
+				),
 				SoReviewForAdmin(
 					ReviewIsNeed(
 						ReviewOne(
