@@ -1,3 +1,6 @@
+import telegram
+
+
 class AdminReview:
 	def __init__(self, db):
 		self.db = db
@@ -40,16 +43,25 @@ class AcReviewForAdmin:
 		self.chat_id = chat_id
 
 	def send(self, transport):
-		# @todo #40 Нужно предоставить администратору основную информацию
-		#  title, коммит, патчсет, статус верификации и ревью.
-		#  И выдать список доступных действий в виде экранных кнопок.
+		# @todo #46 Сейчас сообщение о ревью не достаточно информативно.
+		#  Нужно дополнить его текстом из сабжекта вместо этой абракадабры
 		transport.sendMessage(
 			self.chat_id,
 			text='GERRIT: Update review %s, (%s, %s)' % (
 				self.review['id'],
 				self.review['revision'][:7],
 				self.review['verify']
-			)
+			),
+			reply_markup=telegram.InlineKeyboardMarkup([[
+				telegram.InlineKeyboardButton(
+					'Approve',
+					callback_data='approve %s' % self.review['id']
+				),
+				telegram.InlineKeyboardButton(
+					'Reject',
+					callback_data='reject %s' % self.review['id']
+				)
+			]])
 		)
 
 	def save(self, db):

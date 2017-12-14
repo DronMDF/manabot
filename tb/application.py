@@ -13,6 +13,9 @@ class Application:
 							config,
 							TelegramOffsetFromDb(TinyDataBase(config.value('telegram.db')))
 						),
+						# @todo #46 Когда мы нажимаем на кнопку - мы получаем событие с коллбеком
+						#  сейчас оно никак не парсится.
+						#  а нужно связать с герритом и отправить вердикт туда.
 						ReactionEcho()
 					)
 				),
