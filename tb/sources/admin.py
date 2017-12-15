@@ -1,4 +1,5 @@
 import telegram
+import hashlib
 
 
 class AdminReview:
@@ -45,6 +46,7 @@ class AcReviewForAdmin:
 	def send(self, transport):
 		# @todo #46 Сейчас сообщение о ревью не достаточно информативно.
 		#  Нужно дополнить его текстом из сабжекта вместо этой абракадабры
+		review_id_hash = hashlib.md5(self.review['id'].encode('ascii')).hexdigest()
 		transport.sendMessage(
 			self.chat_id,
 			text='GERRIT: Update review %s, (%s, %s)' % (
@@ -55,11 +57,11 @@ class AcReviewForAdmin:
 			reply_markup=telegram.InlineKeyboardMarkup([[
 				telegram.InlineKeyboardButton(
 					'Approve',
-					callback_data='approve %s' % self.review['id']
+					callback_data='approve %s' % review_id_hash
 				),
 				telegram.InlineKeyboardButton(
 					'Reject',
-					callback_data='reject %s' % self.review['id']
+					callback_data='reject %s' % review_id_hash
 				)
 			]])
 		)
