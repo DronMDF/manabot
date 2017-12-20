@@ -1,3 +1,7 @@
+import hashlib
+import re
+
+
 class AcTelegramUpdate:
 	def __init__(self, update):
 		self.update = update
@@ -58,7 +62,7 @@ class AcTelegramText:
 
 	def send(self, transport):
 		transport.sendMessage(
-			chat_id=self.update.message.chat.id,
+			chat_id=self.update.effective_chat.id,
 			text=self.text
 		)
 
@@ -72,3 +76,25 @@ class ReactionAlways:
 
 	def react(self, update):
 		return AcTelegramText(update, self.text)
+
+
+class ReactionReview:
+	def __init__(self, review):
+		self.review = review
+
+	def action(self, update):
+		hash = hashlib.md5(self.review.active().encode('ascii')).hexdigest()
+		rx = re.match('(approve|reject|ignore) %s' % hash, update.callback_query.data)
+		if rx:
+			return rx.group(1)
+		return None
+
+	def check(self, update):
+		return self.action(update)
+
+	def react(self, update):
+		# @todo #49 Эта информация нам не интересна, сейчас она возвращается для теста.
+		#  Необходимо предпринять меры, которые пожелал сделать админ.
+		#  Режектим или сабмитим геррит, это раз.
+		#  Если админ сказал Игнорировать - то надо прикопать в БД, что этот ревью нам не интересен
+		return AcTelegramText(update, self.action(update))

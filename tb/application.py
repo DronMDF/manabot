@@ -17,10 +17,9 @@ class Application:
 							ReactionRestrict(
 								config.value('telegram.username'),
 								ReactionChoiced(
-									# @todo #46 Когда мы нажимаем на кнопку -
-									#  мы получаем событие с коллбеком
-									#  сейчас оно никак не парсится.
-									#  а нужно связать с герритом и отправить вердикт туда.
+									ReactionReview(
+										AdminReview(TinyDataBase(config.value('admin.db')))
+									),
 									ReactionAlways("Не совсем понятно, что ты хочешь мне сказать...")
 								)
 							),
