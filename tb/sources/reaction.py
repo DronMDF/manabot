@@ -84,7 +84,10 @@ class ReactionReview:
 
 	def action(self, update):
 		hash = hashlib.md5(self.review.active().encode('ascii')).hexdigest()
-		rx = re.match('(approve|reject|ignore) %s' % hash, update.callback_query.data)
+		rx = re.match(
+			'(approve|reject|ignore) %s' % hash,
+			update.callback_query.data
+		)
 		if rx:
 			return rx.group(1)
 		return None
@@ -93,8 +96,10 @@ class ReactionReview:
 		return self.action(update)
 
 	def react(self, update):
-		# @todo #49 Эта информация нам не интересна, сейчас она возвращается для теста.
+		# @todo #49 Эта информация нам не интересна,
+		#  сейчас она возвращается для теста.
 		#  Необходимо предпринять меры, которые пожелал сделать админ.
 		#  Режектим или сабмитим геррит, это раз.
-		#  Если админ сказал Игнорировать - то надо прикопать в БД, что этот ревью нам не интересен
+		#  Если админ сказал Игнорировать - то надо прикопать в БД,
+		#  что этот ревью нам не интересен
 		return AcTelegramText(update, self.action(update))
