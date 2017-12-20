@@ -46,3 +46,29 @@ class ReactionChoiced:
 		for r in self.reactions:
 			if r.check(update):
 				return r.react(update)
+
+
+class AcTelegramText:
+	def __init__(self, update, text):
+		self.update = update
+		self.text = text
+
+	def save(self, db):
+		db.set('update_id', self.update.update_id, 'telegram')
+
+	def send(self, transport):
+		transport.sendMessage(
+			chat_id=self.update.message.chat.id,
+			text=self.text
+		)
+
+
+class ReactionAlways:
+	def __init__(self, text):
+		self.text = text
+
+	def check(self, update):
+		return True
+
+	def react(self, update):
+		return AcTelegramText(update, self.text)
