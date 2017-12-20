@@ -13,10 +13,18 @@ class Application:
 							config,
 							TelegramOffsetFromDb(TinyDataBase(config.value('telegram.db')))
 						),
-						# @todo #46 Когда мы нажимаем на кнопку - мы получаем событие с коллбеком
-						#  сейчас оно никак не парсится.
-						#  а нужно связать с герритом и отправить вердикт туда.
-						ReactionEcho()
+						ReactionChoiced(
+							ReactionRestrict(
+								config.value('telegram.username'),
+								ReactionChoiced(
+									ReactionReview(
+										AdminReview(TinyDataBase(config.value('admin.db')))
+									),
+									ReactionAlways("Не совсем понятно, что ты хочешь мне сказать...")
+								)
+							),
+							ReactionAlways("Ты кто такой, давай, досвидания")
+						)
 					)
 				),
 				SoNewReview(

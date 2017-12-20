@@ -62,6 +62,10 @@ class AcReviewForAdmin:
 				telegram.InlineKeyboardButton(
 					'Reject',
 					callback_data='reject %s' % review_id_hash
+				),
+				telegram.InlineKeyboardButton(
+					'Ignore',
+					callback_data='ignore %s' % review_id_hash
 				)
 			]])
 		)
