@@ -1,6 +1,6 @@
 import telegram
 import unittest
-from .reaction import ReactionEcho
+from .reaction import ReactionAlways
 
 
 class TelegramOffsetFromDb:
@@ -78,7 +78,7 @@ class FakeTransport:
 
 class SoTelegramTest(unittest.TestCase):
 	def test(self):
-		so = SoTelegram(FakeBot("hello"), ReactionEcho())
+		so = SoTelegram(FakeBot("hello"), ReactionAlways('ehlo'))
 		transport = FakeTransport()
 		so.actions()[0].send(transport)
-		self.assertEqual(transport.text, "hello")
+		self.assertEqual(transport.text, "ehlo")

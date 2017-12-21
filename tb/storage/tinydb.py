@@ -1,5 +1,8 @@
 from tinydb import TinyDB, where
 
+# @todo #55 Необходима поддержка таблиц.
+#  Иначе в admin.json у нас будут перемешиваться команды и параметры.
+
 
 class TinySelect:
 	def __init__(self, databases):
