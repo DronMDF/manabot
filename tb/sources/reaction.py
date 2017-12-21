@@ -1,27 +1,6 @@
 import hashlib
 import re
-
-
-class AcTelegramUpdate:
-	def __init__(self, update):
-		self.update = update
-
-	def save(self, db):
-		db.set('update_id', self.update.update_id, 'telegram')
-
-	def send(self, transport):
-		transport.sendMessage(
-			chat_id=self.update.message.chat.id,
-			text=self.update.message.text
-		)
-
-
-class ReactionEcho:
-	def check(self, update):
-		return True
-
-	def react(self, update):
-		return AcTelegramUpdate(update)
+from .action import *
 
 
 class ReactionRestrict:
@@ -50,21 +29,6 @@ class ReactionChoiced:
 		for r in self.reactions:
 			if r.check(update):
 				return r.react(update)
-
-
-class AcTelegramText:
-	def __init__(self, update, text):
-		self.update = update
-		self.text = text
-
-	def save(self, db):
-		db.set('update_id', self.update.update_id, 'telegram')
-
-	def send(self, transport):
-		transport.sendMessage(
-			chat_id=self.update.effective_chat.id,
-			text=self.text
-		)
 
 
 class ReactionAlways:
@@ -96,10 +60,8 @@ class ReactionReview:
 		return self.action(update)
 
 	def react(self, update):
-		# @todo #49 Эта информация нам не интересна,
-		#  сейчас она возвращается для теста.
-		#  Необходимо предпринять меры, которые пожелал сделать админ.
-		#  Режектим или сабмитим геррит, это раз.
-		#  Если админ сказал Игнорировать - то надо прикопать в БД,
-		#  что этот ревью нам не интересен
-		return AcTelegramText(update, self.action(update))
+		return AcAdminAction(
+			update.update_id,
+			self.action(update),
+			self.review.active()
+		)
