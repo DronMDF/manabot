@@ -20,10 +20,14 @@ class AcAdminAction:
 		self.review_id = review_id
 
 	def save(self, db):
-		db.insert({
-			'action': self.action,
-			'review_id': self.review_id
-		}, 'admin')
+		db.insert(
+			{
+				'action': self.action,
+				'review_id': self.review_id
+			},
+			database='admin',
+			table='commands'
+		)
 		db.set('update_id', self.update_id, 'telegram')
 
 	def send(self, transport):
