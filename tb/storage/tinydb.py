@@ -43,5 +43,6 @@ class TinyDataBase:
 	def update(self, id, json, table='_default'):
 		TinyDB(self.filename).table(table).update(json, where('id') == id)
 
+	# @todo #57 Для идентификации элементов стоит использовать doc_id
 	def delete(self, id, table='_default'):
 		TinyDB(self.filename).table(table).remove(where('id') == id)
