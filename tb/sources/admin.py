@@ -1,5 +1,6 @@
 import telegram
 import hashlib
+from time import time
 
 
 class AdminReview:
@@ -96,3 +97,42 @@ class SoReviewForAdmin:
 			AcReviewForAdmin(review, self.chat_id)
 			for review in self.reviews
 		]
+
+
+class AdminCommands:
+	def __init__(self, db):
+		self.db = db
+
+	def __iter__(self):
+		return iter(self.db.all(table='commands'))
+
+
+class AdminIgnoreCommands:
+	def __init__(self, commands):
+		self.commands = commands
+
+	def __iter__(self):
+		return (s for s in self.commands if s['action'] == 'ignore')
+
+
+class AcIgnoreReview:
+	def __init__(self, command):
+		self.command = command
+
+	def send(self, transport):
+		pass
+
+	def save(self, db):
+		db.update(self.command['review_id'], {
+			'status': 'ignore',
+			'time': int(time())
+		}, 'gerrit')
+		db.delete(self.command.doc_id, 'admin', 'commands')
+
+
+class SoIgnoreReview:
+	def __init__(self, commands):
+		self.commands = commands
+
+	def actions(self):
+		return [AcIgnoreReview(c) for c in self.commands]
