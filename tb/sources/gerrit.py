@@ -120,7 +120,8 @@ class SoOutReviewTest(TestCase):
 
 
 class AcUpdateReview:
-	def __init__(self, review):
+	def __init__(self, updating, review):
+		self.updating = updating
 		self.review = review
 
 	def send(self, transport):
@@ -128,8 +129,9 @@ class AcUpdateReview:
 
 	def save(self, db):
 		db.update(
-			self.review['id'],
+			self.updating.value().doc_id,
 			{
+				'id': self.review['id'],
 				'revision': self.review['revision'],
 				'verify': self.review['verify']
 			},
@@ -146,6 +148,8 @@ class AcUpdateReview:
 
 class SoUpdateReview:
 	def __init__(self, remote, controlled):
+		# @todo #67 Здесь на вход необходимо подавать умный список ревью,
+		#  Элементы которого будут иметь идентифкатор БД и данные для обновления
 		self.remote = remote
 		self.controlled = controlled
 
@@ -157,4 +161,7 @@ class SoUpdateReview:
 		))
 
 	def actions(self):
-		return [AcUpdateReview(v) for v in self.remote if self.needUpdate(v)]
+		return [
+			AcUpdateReview(ReviewById(self.controlled, v['id']), v)
+			for v in self.remote if self.needUpdate(v)
+		]
