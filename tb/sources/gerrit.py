@@ -2,6 +2,7 @@ from pygerrit2.rest import GerritRestAPI
 from requests.auth import HTTPDigestAuth
 from unittest import TestCase
 from tb.storage import TinyDataBase
+from .review import ReviewIds, ReviewById
 
 
 class GerritReview:
@@ -81,32 +82,40 @@ class SoNewReviewTest(TestCase):
 
 
 class AcOutReview:
-	def __init__(self, id):
-		self.id = id
+	def __init__(self, review):
+		self.review = review
 
 	def send(self, transport):
 		pass
 
 	def save(self, db):
-		db.delete(self.id, 'gerrit')
-		print('GERRIT: Out review', self.id)
+		r = self.review.value()
+		db.delete(r.doc_id, 'gerrit')
+		print('GERRIT: Out review', r['id'])
 
 
 class SoOutReview:
-	def __init__(self, controlled_ids, remote_ids):
-		self.controlled_ids = controlled_ids
+	def __init__(self, controlled, remote_ids):
+		self.controlled = controlled
 		self.remote_ids = remote_ids
 
 	def actions(self):
+		# @todo #63 Создавать здесь классы - не самая хорошая идея.
+		#  Особенно учитывая тот факт, что на вход мы получили полный список
+		#  контролируемых идентификаторов, нелогично как-то.
+		#  Может быть стоит на вход подать список удаляемых ревью?
 		return [
-			AcOutReview(id)
-			for id in set(self.controlled_ids) - set(self.remote_ids)
+			AcOutReview(ReviewById(self.controlled, id))
+			for id in set(ReviewIds(self.controlled)) - set(self.remote_ids)
 		]
 
 
 class SoOutReviewTest(TestCase):
 	def testOut(self):
-		so = SoOutReview(controlled_ids=[1, 2, 3], remote_ids=[2, 3, 4])
+		so = SoOutReview(
+			controlled=[{'id': 1}, {'id': 2}, {'id': 3}],
+			remote_ids=[2, 3, 4]
+		)
 		self.assertEqual(len(so.actions()), 1)
 
 

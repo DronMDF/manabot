@@ -40,3 +40,12 @@ class ReviewIsNeed:
 			return iter(self.reviews)
 		else:
 			return iter([])
+
+
+class ReviewById:
+	def __init__(self, reviews, gerrit_id):
+		self.reviews = reviews
+		self.gerrit_id = gerrit_id
+
+	def value(self):
+		return next((r for r in self.reviews if r['id'] == self.gerrit_id))

@@ -32,7 +32,7 @@ class Application:
 					ReviewIds(ReviewOnServer(config))
 				),
 				SoOutReview(
-					ReviewIds(ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))),
+					ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
 					ReviewIds(ReviewOnServer(config))
 				),
 				SoUpdateReview(
