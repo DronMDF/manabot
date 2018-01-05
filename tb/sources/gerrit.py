@@ -60,25 +60,11 @@ class AcNewReview:
 
 
 class SoNewReview:
-	def __init__(self, controlled_ids, remote_ids):
-		self.controlled_ids = controlled_ids
-		self.remote_ids = remote_ids
+	def __init__(self, added):
+		self.added = added
 
 	def actions(self):
-		return [
-			AcNewReview(id)
-			for id in set(self.remote_ids) - set(self.controlled_ids)
-		]
-
-
-class SoNewReviewTest(TestCase):
-	def testNewFromClean(self):
-		so = SoNewReview(controlled_ids=[], remote_ids=[1, 2, 3])
-		self.assertEqual(len(so.actions()), 3)
-
-	def testNewWithExists(self):
-		so = SoNewReview(controlled_ids=[1, 2], remote_ids=[1, 2, 3])
-		self.assertEqual(len(so.actions()), 1)
+		return [AcNewReview(r['id']) for r in self.added]
 
 
 class AcOutReview:
