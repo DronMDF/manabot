@@ -42,6 +42,16 @@ class ReviewIsNeed:
 			return iter([])
 
 
+class ReviewDifference:
+	def __init__(self, reviews, others):
+		self.reviews = reviews
+		self.others = others
+
+	def __iter__(self):
+		others_id = {r['id'] for r in self.others}
+		return (r for r in self.reviews if r['id'] not in others_id)
+
+
 class ReviewById:
 	def __init__(self, reviews, gerrit_id):
 		self.reviews = reviews
