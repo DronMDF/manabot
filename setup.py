@@ -87,6 +87,9 @@ class Test(Command):
 
 	def run(self):
 		try:
+			# @todo #71 Тесты считаются странно,
+			#  удалил два теста, и их стало меньше на 8...
+			#  Возможно это из за звездочных импортов
 			suite = TestLoader().discover('.', '*.py')
 			runner = TextTestRunner()
 			results = runner.run(suite)

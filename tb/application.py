@@ -27,12 +27,11 @@ class Application:
 						)
 					)
 				),
-				# @todo #66 Здесь так же необходимо использовать ReviewDifference
-				#  Этот класс не должен выполнять функции
-				#  построения списка различий между двумя наборами.
 				SoNewReview(
-					ReviewIds(ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))),
-					ReviewIds(ReviewOnServer(config))
+					ReviewDifference(
+						ReviewOnServer(config),
+						ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+					)
 				),
 				SoOutReview(
 					ReviewDifference(
