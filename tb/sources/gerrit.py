@@ -89,34 +89,16 @@ class AcOutReview:
 		pass
 
 	def save(self, db):
-		r = self.review.value()
-		db.delete(r.doc_id, 'gerrit')
-		print('GERRIT: Out review', r['id'])
+		db.delete(self.review.doc_id, 'gerrit')
+		print('GERRIT: Out review', self.review['id'])
 
 
 class SoOutReview:
-	def __init__(self, controlled, remote_ids):
-		self.controlled = controlled
-		self.remote_ids = remote_ids
+	def __init__(self, removed):
+		self.removed = removed
 
 	def actions(self):
-		# @todo #63 Создавать здесь классы - не самая хорошая идея.
-		#  Особенно учитывая тот факт, что на вход мы получили полный список
-		#  контролируемых идентификаторов, нелогично как-то.
-		#  Может быть стоит на вход подать список удаляемых ревью?
-		return [
-			AcOutReview(ReviewById(self.controlled, id))
-			for id in set(ReviewIds(self.controlled)) - set(self.remote_ids)
-		]
-
-
-class SoOutReviewTest(TestCase):
-	def testOut(self):
-		so = SoOutReview(
-			controlled=[{'id': 1}, {'id': 2}, {'id': 3}],
-			remote_ids=[2, 3, 4]
-		)
-		self.assertEqual(len(so.actions()), 1)
+		return [AcOutReview(r) for r in self.removed]
 
 
 class AcUpdateReview:
