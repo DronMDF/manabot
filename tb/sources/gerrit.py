@@ -2,12 +2,12 @@ from pygerrit2.rest import GerritRestAPI
 from requests.auth import HTTPDigestAuth
 from unittest import TestCase
 from tb.storage import TinyDataBase
-from .review import ReviewIds, ReviewById
 
 
 class GerritReview:
 	def __init__(self, change):
 		self.change = change
+		self.doc_id = None
 
 	def __getitem__(self, key):
 		if key == 'verify':
