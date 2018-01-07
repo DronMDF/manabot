@@ -2,12 +2,12 @@ from pygerrit2.rest import GerritRestAPI
 from requests.auth import HTTPDigestAuth
 from unittest import TestCase
 from tb.storage import TinyDataBase
-from .review import ReviewIds, ReviewById
 
 
 class GerritReview:
 	def __init__(self, change):
 		self.change = change
+		self.doc_id = None
 
 	def __getitem__(self, key):
 		if key == 'verify':
@@ -88,8 +88,7 @@ class SoOutReview:
 
 
 class AcUpdateReview:
-	def __init__(self, updating, review):
-		self.updating = updating
+	def __init__(self, review):
 		self.review = review
 
 	def send(self, transport):
@@ -97,7 +96,7 @@ class AcUpdateReview:
 
 	def save(self, db):
 		db.update(
-			self.updating.value().doc_id,
+			self.review.doc_id,
 			{
 				'id': self.review['id'],
 				'revision': self.review['revision'],
@@ -115,21 +114,8 @@ class AcUpdateReview:
 
 
 class SoUpdateReview:
-	def __init__(self, remote, controlled):
-		# @todo #67 Здесь на вход необходимо подавать умный список ревью,
-		#  Элементы которого будут иметь идентифкатор БД и данные для обновления
-		self.remote = remote
-		self.controlled = controlled
-
-	def needUpdate(self, review):
-		local = next((l for l in self.controlled if l['id'] == review['id']), None)
-		return local is not None and not all((
-			local['revision'] == review['revision'],
-			local['verify'] == review['verify']
-		))
+	def __init__(self, updated):
+		self.updated = updated
 
 	def actions(self):
-		return [
-			AcUpdateReview(ReviewById(self.controlled, v['id']), v)
-			for v in self.remote if self.needUpdate(v)
-		]
+		return [AcUpdateReview(r) for r in self.updated]

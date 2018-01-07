@@ -40,8 +40,10 @@ class Application:
 					)
 				),
 				SoUpdateReview(
-					ReviewOnServer(config),
-					ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
+					ReviewForUpdate(
+						ReviewOnServer(config),
+						ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
+					)
 				),
 				# @todo #57 Админу показываем только те ревью,
 				#  которые не отмечены как игнорированные
