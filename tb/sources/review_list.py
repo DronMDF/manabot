@@ -25,6 +25,14 @@ class ReviewVerified:
 		return (r for r in self.reviews if r['verify'])
 
 
+class ReviewIgnored:
+	def __init__(self, reviews):
+		self.reviews = reviews
+
+	def __iter__(self):
+		return (r for r in self.reviews if r.get('status', 'none') == 'ignored')
+
+
 class ReviewOne:
 	def __init__(self, reviews):
 		self.reviews = reviews
@@ -34,15 +42,13 @@ class ReviewOne:
 
 
 class ReviewIsNeed:
-	def __init__(self, reviews, current):
-		self.reviews = reviews
+	def __init__(self, current, reviews):
 		self.current = current
+		self.reviews = reviews
 
 	def __iter__(self):
-		if not self.current.active():
-			return iter(self.reviews)
-		else:
-			return iter([])
+		# Если в current что-то есть - новые не нужны
+		return iter([] if self.current else self.reviews)
 
 
 class ReviewDifference:

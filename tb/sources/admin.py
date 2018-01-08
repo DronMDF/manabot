@@ -3,24 +3,23 @@ import hashlib
 from time import time
 
 
-class AdminReview:
+class ReviewAdmin:
+	def __init__(self, id):
+		self.id = id
+
+	def __getitem__(self, name):
+		return self.__dict__[name]
+
+
+class ReviewListAdmin:
 	def __init__(self, db):
 		self.db = db
 
-	def active(self):
-		return self.db.get('active_review', False)
-
-
-class ReviewIsOut:
-	def __init__(self, actual, reviews_id):
-		self.actual = actual
-		self.reviews_id = reviews_id
-
 	def __iter__(self):
 		return (
-			id
-			for id in [self.actual.active()]
-			if id and id not in self.reviews_id
+			ReviewAdmin(i)
+			for i in [self.db.get('active_review', False)]
+			if i
 		)
 
 
@@ -76,14 +75,14 @@ class AcReviewForAdmin:
 
 
 class SoAdminReviewIsOut:
-	def __init__(self, reviews_id, chat_id):
-		self.reviews_id = reviews_id
+	def __init__(self, reviews, chat_id):
+		self.reviews = reviews
 		self.chat_id = chat_id
 
 	def actions(self):
 		return [
-			AcAdminReviewIsOut(review_id, self.chat_id)
-			for review_id in self.reviews_id
+			AcAdminReviewIsOut(r, self.chat_id)
+			for r in self.reviews
 		]
 
 
@@ -123,6 +122,11 @@ class AcIgnoreReview:
 		pass
 
 	def save(self, db):
+		# @todo #64 Необходимо использовать идентификатор записи ревью в БД,
+		#  для этого необходимо отфильтровать список ревью на основании команды
+		#  Или просто все команды странслировать в ревью. Может быть мне стоит делать
+		#  два независимых экшина, чтобы не смешивать два дела в одном?
+		#  возможно я могу прикопать идентификатор записи при создании команды?
 		db.update(self.command['review_id'], {
 			'status': 'ignore',
 			'time': int(time())
