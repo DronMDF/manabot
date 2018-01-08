@@ -46,15 +46,24 @@ class Application:
 						ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
 					)
 				),
-				# @todo #57 Админу показываем только те ревью,
-				#  которые не отмечены как игнорированные
-				#  Если ревью отмечено как игнорированное,
-				#  оно должно уйти с ревью и освободить место для других ревью
+				# Admin sources
+				SoIgnoreReview(
+					AdminIgnoreCommands(
+						AdminCommands(
+							TinyDataBase(config.value('admin.db'))
+						)
+					)
+				),
 				SoAdminReviewIsOut(
 					ReviewDifference(
 						ReviewListAdmin(TinyDataBase(config.value('admin.db'))),
-						ReviewVerified(
-							ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+						ReviewDifference(
+							ReviewVerified(
+								ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+							),
+							ReviewIgnored(
+								ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+							)
 						)
 					),
 					config.value('telegram.chat_id')
@@ -69,13 +78,6 @@ class Application:
 						)
 					),
 					config.value('telegram.chat_id')
-				),
-				SoIgnoreReview(
-					AdminIgnoreCommands(
-						AdminCommands(
-							TinyDataBase(config.value('admin.db'))
-						)
-					)
 				)
 				# @todo #55 Источник событий по режекту ревью
 				#  Команды админа хранятся в БД админа, в отдельной таблице задач.

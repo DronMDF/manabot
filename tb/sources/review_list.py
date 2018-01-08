@@ -25,6 +25,14 @@ class ReviewVerified:
 		return (r for r in self.reviews if r['verify'])
 
 
+class ReviewIgnored:
+	def __init__(self, reviews):
+		self.reviews = reviews
+
+	def __iter__(self):
+		return (r for r in self.reviews if r.get('status', 'none') == 'ignored')
+
+
 class ReviewOne:
 	def __init__(self, reviews):
 		self.reviews = reviews

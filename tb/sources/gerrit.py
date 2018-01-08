@@ -54,7 +54,8 @@ class AcNewReview:
 			'id': self.id,
 			'verify': None,
 			'review': None,
-			'revision': None
+			'revision': None,
+			'status': None
 		}, 'gerrit')
 		print('GERRIT: New review', self.id)
 
