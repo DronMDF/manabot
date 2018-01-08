@@ -18,7 +18,7 @@ class Application:
 								config.value('telegram.username'),
 								ReactionChoiced(
 									ReactionReview(
-										AdminReview(TinyDataBase(config.value('admin.db')))
+										ReviewListAdmin(TinyDataBase(config.value('admin.db')))
 									),
 									ReactionAlways("Не совсем понятно, что ты хочешь мне сказать...")
 								)
@@ -27,6 +27,7 @@ class Application:
 						)
 					)
 				),
+				# Gerrit sources
 				SoNewReview(
 					ReviewDifference(
 						ReviewOnServer(config),
@@ -50,24 +51,22 @@ class Application:
 				#  Если ревью отмечено как игнорированное,
 				#  оно должно уйти с ревью и освободить место для других ревью
 				SoAdminReviewIsOut(
-					ReviewIsOut(
-						AdminReview(TinyDataBase(config.value('admin.db'))),
-						ReviewIds(
-							ReviewVerified(
-								ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
-							)
+					ReviewDifference(
+						ReviewListAdmin(TinyDataBase(config.value('admin.db'))),
+						ReviewVerified(
+							ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
 						)
 					),
 					config.value('telegram.chat_id')
 				),
 				SoReviewForAdmin(
-					ReviewIsNeed(
-						ReviewOne(
+					ReviewOne(
+						ReviewIsNeed(
+							ReviewListAdmin(TinyDataBase(config.value('admin.db'))),
 							ReviewVerified(
 								ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
 							)
-						),
-						AdminReview(TinyDataBase(config.value('admin.db')))
+						)
 					),
 					config.value('telegram.chat_id')
 				),

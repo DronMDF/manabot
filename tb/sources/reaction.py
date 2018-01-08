@@ -43,13 +43,14 @@ class ReactionAlways:
 
 
 class ReactionReview:
-	def __init__(self, review):
-		self.review = review
+	def __init__(self, reviews):
+		self.reviews = reviews
 
 	def action(self, update):
-		hash = hashlib.md5(self.review.active().encode('ascii')).hexdigest()
+		review_id = next((r['id'] for r in self.reviews), 'none')
+		review_id_hash = hashlib.md5(review_id.encode('ascii')).hexdigest()
 		rx = re.match(
-			'(approve|reject|ignore) %s' % hash,
+			'(approve|reject|ignore) %s' % review_id_hash,
 			update.callback_query.data
 		)
 		if rx:
@@ -63,5 +64,5 @@ class ReactionReview:
 		return AcAdminAction(
 			update.update_id,
 			self.action(update),
-			self.review.active()
+			next(iter(self.reviews))['id']
 		)

@@ -34,15 +34,13 @@ class ReviewOne:
 
 
 class ReviewIsNeed:
-	def __init__(self, reviews, current):
-		self.reviews = reviews
+	def __init__(self, current, reviews):
 		self.current = current
+		self.reviews = reviews
 
 	def __iter__(self):
-		if not self.current.active():
-			return iter(self.reviews)
-		else:
-			return iter([])
+		# Если в current что-то есть - новые не нужны
+		return iter([] if self.current else self.reviews)
 
 
 class ReviewDifference:
