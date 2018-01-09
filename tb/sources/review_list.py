@@ -48,7 +48,7 @@ class ReviewIsNeed:
 
 	def __iter__(self):
 		# Если в current что-то есть - новые не нужны
-		return iter([] if self.current else self.reviews)
+		return iter([] if list(self.current) else self.reviews)
 
 
 class ReviewDifference:
