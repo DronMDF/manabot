@@ -9,7 +9,8 @@ class ReactionRestrict:
 		self.reaction = reaction
 
 	def check(self, update):
-		if update.effective_user.username != self.name:
+		user = update.effective_user
+		if user is None or user.username != self.name:
 			return False
 		return self.reaction.check(update)
 
@@ -47,14 +48,15 @@ class ReactionReview:
 		self.reviews = reviews
 
 	def action(self, update):
-		review_id = next((r['id'] for r in self.reviews), 'none')
-		review_id_hash = hashlib.md5(review_id.encode('ascii')).hexdigest()
-		rx = re.match(
-			'(approve|reject|ignore) %s' % review_id_hash,
-			update.callback_query.data
-		)
-		if rx:
-			return rx.group(1)
+		if update.callback_query:
+			review_id = next((r['id'] for r in self.reviews), 'none')
+			review_id_hash = hashlib.md5(review_id.encode('ascii')).hexdigest()
+			rx = re.match(
+				'(approve|reject|ignore) %s' % review_id_hash,
+				update.callback_query.data
+			)
+			if rx:
+				return rx.group(1)
 		return None
 
 	def check(self, update):

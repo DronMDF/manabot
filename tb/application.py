@@ -13,17 +13,14 @@ class Application:
 							config,
 							TelegramOffsetFromDb(TinyDataBase(config.value('telegram.db')))
 						),
-						ReactionChoiced(
-							ReactionRestrict(
-								config.value('telegram.username'),
-								ReactionChoiced(
-									ReactionReview(
-										ReviewListAdmin(TinyDataBase(config.value('admin.db')))
-									),
-									ReactionAlways("Не совсем понятно, что ты хочешь мне сказать...")
-								)
-							),
-							ReactionAlways("Ты кто такой, давай, досвидания")
+						ReactionRestrict(
+							config.value('telegram.username'),
+							ReactionChoiced(
+								ReactionReview(
+									ReviewListAdmin(TinyDataBase(config.value('admin.db')))
+								),
+								ReactionAlways("Не совсем понятно, что ты хочешь мне сказать...")
+							)
 						)
 					)
 				),
