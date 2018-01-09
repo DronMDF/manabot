@@ -44,7 +44,7 @@ class SoTelegram:
 
 	def actions(self):
 		update = self.bot.getUpdates()
-		return [self.reaction.react(u) for u in update]
+		return [self.reaction.react(u) for u in update if self.reaction.check(u)]
 
 
 class FakeMessage(telegram.Message):
