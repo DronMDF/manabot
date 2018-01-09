@@ -36,6 +36,7 @@ class ConfigFromFile:
 		return result
 
 
+# @todo #80 Вынести тестовые классы в test/
 class ConfigFromFileTest(TestCase):
 	def testTelegramTokenInFile(self):
 		config = ConfigFromFile(
