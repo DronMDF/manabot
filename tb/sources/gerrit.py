@@ -1,6 +1,5 @@
 from pygerrit2.rest import GerritRestAPI
 from requests.auth import HTTPDigestAuth
-from unittest import TestCase
 from tb.storage import TinyDataBase
 
 
