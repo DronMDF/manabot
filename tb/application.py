@@ -45,10 +45,13 @@ class Application:
 				),
 				# Admin sources
 				SoIgnoreReview(
-					AdminIgnoreCommands(
-						AdminCommands(
-							TinyDataBase(config.value('admin.db'))
-						)
+					ReviewListByCommands(
+						AdminIgnoreCommands(
+							AdminCommands(
+								TinyDataBase(config.value('admin.db'))
+							)
+						),
+						ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
 					)
 				),
 				SoAdminReviewIsOut(
