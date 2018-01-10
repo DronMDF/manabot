@@ -72,8 +72,15 @@ class Application:
 					ReviewOne(
 						ReviewIsNeed(
 							ReviewListAdmin(TinyDataBase(config.value('admin.db'))),
-							ReviewVerified(
-								ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+							# @todo #86 Этот кусок кода повторяется два раза.
+							#  Возможно его стоит вынести в отдельный класс ReviewListForAdmin
+							ReviewDifference(
+								ReviewVerified(
+									ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+								),
+								ReviewIgnored(
+									ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+								)
 							)
 						)
 					),

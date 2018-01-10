@@ -30,7 +30,7 @@ class ReviewIgnored:
 		self.reviews = reviews
 
 	def __iter__(self):
-		return (r for r in self.reviews if r.get('status', 'none') == 'ignored')
+		return (r for r in self.reviews if r.get('status', 'none') == 'ignore')
 
 
 class ReviewOne:
