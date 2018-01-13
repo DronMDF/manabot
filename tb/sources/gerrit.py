@@ -100,15 +100,15 @@ class AcUpdateReview:
 			{
 				'id': self.review['id'],
 				'revision': self.review['revision'],
-				'verify': self.review['verify']
+				'verify': self.review['verify'],
+				'subject': self.review['subject']
 			},
 			'gerrit'
 		)
 		print(
-			'GERRIT: Update review %s, (%s, %s)' % (
-				self.review['id'],
+			'GERRIT: Update %s %s' % (
 				self.review['revision'][:7],
-				self.review['verify']
+				self.review['subject']
 			)
 		)
 
