@@ -44,8 +44,6 @@ class AcReviewForAdmin:
 		self.chat_id = chat_id
 
 	def send(self, transport):
-		# @todo #46 Сейчас сообщение о ревью не достаточно информативно.
-		#  Нужно дополнить его текстом из сабжекта вместо этой абракадабры
 		review_id_hash = hashlib.md5(self.review['id'].encode('ascii')).hexdigest()
 		transport.sendMessage(
 			self.chat_id,
