@@ -49,10 +49,9 @@ class AcReviewForAdmin:
 		review_id_hash = hashlib.md5(self.review['id'].encode('ascii')).hexdigest()
 		transport.sendMessage(
 			self.chat_id,
-			text='GERRIT: Update review %s, (%s, %s)' % (
-				self.review['id'],
+			text='Review is ready: %s %s' % (
 				self.review['revision'][:7],
-				self.review['verify']
+				self.review['subject']
 			),
 			reply_markup=telegram.InlineKeyboardMarkup([[
 				telegram.InlineKeyboardButton(
