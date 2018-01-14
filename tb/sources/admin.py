@@ -1,6 +1,5 @@
 import telegram
 import hashlib
-from time import time
 
 
 class ReviewAdmin:
@@ -24,18 +23,34 @@ class ReviewListAdmin:
 
 
 class AcAdminReviewIsOut:
-	def __init__(self, review_id, chat_id):
-		self.review_id = review_id
+	def __init__(self, review, chat_id):
+		self.review = review
 		self.chat_id = chat_id
 
 	def send(self, transport):
+		# @todo #78: Единственно доступная здесь информация -
+		#  это review id, который хранится в БД администратора.
+		#  Хотя хотелось бы видеть сабжект от ревью,
+		#  но в БД геррита этого ревью уже нет.
 		transport.sendMessage(
 			self.chat_id,
-			text='GERRIT: Review %s is Out' % self.review_id
+			text='Review is Out: %s' % self.review['id']
 		)
 
 	def save(self, db):
 		db.set('active_review', False, 'admin')
+
+
+class SoAdminReviewIsOut:
+	def __init__(self, reviews, chat_id):
+		self.reviews = reviews
+		self.chat_id = chat_id
+
+	def actions(self):
+		return [
+			AcAdminReviewIsOut(r, self.chat_id)
+			for r in self.reviews
+		]
 
 
 class AcReviewForAdmin:
@@ -69,18 +84,6 @@ class AcReviewForAdmin:
 
 	def save(self, db):
 		db.set('active_review', self.review['id'], 'admin')
-
-
-class SoAdminReviewIsOut:
-	def __init__(self, reviews, chat_id):
-		self.reviews = reviews
-		self.chat_id = chat_id
-
-	def actions(self):
-		return [
-			AcAdminReviewIsOut(r, self.chat_id)
-			for r in self.reviews
-		]
 
 
 class SoReviewForAdmin:
