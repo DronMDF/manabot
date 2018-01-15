@@ -25,16 +25,16 @@ class Application:
 					)
 				),
 				# Gerrit sources
-				SoNewReview(
-					ReviewDifference(
-						ReviewOnServer(config),
-						ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
-					)
-				),
 				SoOutReview(
 					ReviewDifference(
 						ReviewUnderControl(TinyDataBase(config.value('gerrit.db'))),
 						ReviewOnServer(config)
+					)
+				),
+				SoNewReview(
+					ReviewDifference(
+						ReviewOnServer(config),
+						ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
 					)
 				),
 				SoUpdateReview(
