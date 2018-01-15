@@ -1,5 +1,6 @@
 from pygerrit2.rest import GerritRestAPI
 from requests.auth import HTTPDigestAuth
+from time import time
 from tb.storage import TinyDataBase
 
 
@@ -54,7 +55,8 @@ class AcNewReview:
 			'verify': None,
 			'review': None,
 			'revision': None,
-			'status': None
+			'status': None,
+			'time': int(time())
 		}, 'gerrit')
 		print('GERRIT: New review', self.id)
 
@@ -101,7 +103,9 @@ class AcUpdateReview:
 				'id': self.review['id'],
 				'revision': self.review['revision'],
 				'verify': self.review['verify'],
-				'subject': self.review['subject']
+				'subject': self.review['subject'],
+				'status': None,
+				'time': int(time())
 			},
 			'gerrit'
 		)
@@ -113,6 +117,7 @@ class AcUpdateReview:
 		)
 
 
+# @todo #91 Не обновляются ревью, где-то с сопоставлением видимо косяк
 class SoUpdateReview:
 	def __init__(self, updated):
 		self.updated = updated
