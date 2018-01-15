@@ -8,7 +8,7 @@ class ReviewFake:
 		self.values = kwargs
 
 	def __getitem__(self, name):
-		return self.kwargs[name]
+		return self.values[name]
 
 
 class TestReviewHasheable(unittest.TestCase):
@@ -20,4 +20,4 @@ class TestReviewHasheable(unittest.TestCase):
 	def testDiffer(self):
 		r1 = ReviewHasheable(ReviewFake(revision=10, verify=False, subject='yyx'))
 		r2 = ReviewHasheable(ReviewFake(revision=10, verify=False, subject='yyy'))
-		self.assertEqual(hash(r1), hash(r2))
+		self.assertNotEqual(hash(r1), hash(r2))

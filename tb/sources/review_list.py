@@ -6,7 +6,7 @@ class ReviewUnderControl:
 		self.db = db
 
 	def __iter__(self):
-		return iter(self.db.all())
+		return (Review(r) for r in self.db.all())
 
 
 class ReviewIds:
@@ -30,7 +30,7 @@ class ReviewIgnored:
 		self.reviews = reviews
 
 	def __iter__(self):
-		return (r for r in self.reviews if r.get('status', 'none') == 'ignore')
+		return (r for r in self.reviews if r['status'] == 'ignore')
 
 
 class ReviewOne:

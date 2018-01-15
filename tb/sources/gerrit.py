@@ -117,7 +117,6 @@ class AcUpdateReview:
 		)
 
 
-# @todo #91 Не обновляются ревью, где-то с сопоставлением видимо косяк
 class SoUpdateReview:
 	def __init__(self, updated):
 		self.updated = updated
