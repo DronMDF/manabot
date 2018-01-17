@@ -46,10 +46,22 @@ class Application:
 				# Admin sources
 				SoIgnoreReview(
 					ReviewListByCommands(
-						AdminIgnoreCommands(
+						AdminFilteredCommands(
 							AdminCommands(
 								TinyDataBase(config.value('admin.db'))
-							)
+							),
+							'ignore'
+						),
+						ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
+					)
+				),
+				SoSubmitReview(
+					ReviewListByCommands(
+						AdminFilteredCommands(
+							AdminCommands(
+								TinyDataBase(config.value('admin.db'))
+							),
+							'submit'
 						),
 						ReviewUnderControl(TinyDataBase(config.value('gerrit.db')))
 					)
@@ -87,8 +99,6 @@ class Application:
 					config.value('telegram.chat_id')
 				)
 				# @todo #55 Источник событий по режекту ревью
-				#  Команды админа хранятся в БД админа, в отдельной таблице задач.
-				# @todo #55 Источник событий по аппруву ревью
 				#  Команды админа хранятся в БД админа, в отдельной таблице задач.
 			)
 		)
