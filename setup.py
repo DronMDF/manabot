@@ -34,6 +34,7 @@ class PylintReporter:
 
 class Style(Command):
 	user_options = []
+	reporter = PylintReporter()
 
 	def initialize_options(self):
 		pass
@@ -51,7 +52,7 @@ class Style(Command):
 		# @todo #102 Постоянно выскакивает сообщение
 		#  'No config file found, using default configuration'
 		#  от него можно избавиться в теории, я пока не нашел подходов
-		return Run([
+		Run([
 			'--enable=all',
 			'--disable=mixed-indentation',
 			'--disable=missing-docstring',
@@ -64,7 +65,8 @@ class Style(Command):
 			'--disable=invalid-name',
 			'--score=n',
 			filename
-		], reporter=PylintReporter(), exit=False)
+		], reporter=self.reporter, exit=False)
+		return self.reporter.errors == 0
 
 	def radon_cc(self, filename, config):
 		result = True
@@ -108,7 +110,8 @@ class Style(Command):
 
 	def run(self):
 		try:
-			if not all((self.check(f) for f in self.files())):
+			results = [self.check(f) for f in self.files()]
+			if not all(results):
 				print("Style check failed")
 				sys.exit(-1)
 		except Exception as exc:
