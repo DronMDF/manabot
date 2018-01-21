@@ -37,6 +37,7 @@ class ReactionAlways:
 		self.text = text
 
 	def check(self, update):
+		assert update
 		return True
 
 	def react(self, update):

@@ -1,7 +1,6 @@
+from time import time
 from pygerrit2.rest import GerritRestAPI
 from requests.auth import HTTPDigestAuth
-from time import time
-from tb.storage import TinyDataBase
 
 
 class GerritReview:
@@ -12,10 +11,9 @@ class GerritReview:
 	def __getitem__(self, key):
 		if key == 'verify':
 			return 'approved' in self.change.get('labels', {}).get('Verified', {})
-		elif key == 'revision':
+		if key == 'revision':
 			return self.change['current_revision']
-		else:
-			return self.change[key]
+		return self.change[key]
 
 
 class ReviewOnServer:

@@ -63,6 +63,7 @@ class Style(Command):
 			'--disable=too-few-public-methods',
 			'--disable=wildcard-import',
 			'--disable=invalid-name',
+			'--disable=redefined-builtin',
 			'--score=n',
 			filename
 		], reporter=self.reporter, exit=False)
@@ -110,6 +111,8 @@ class Style(Command):
 
 	def run(self):
 		try:
+			# @todo #102 Список файлов стоит передавать на контроль полностью
+			#  это позволит более оптимально организовать проверку в разных чекерах.
 			results = [self.check(f) for f in self.files()]
 			if not all(results):
 				print("Style check failed")

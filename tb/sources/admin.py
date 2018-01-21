@@ -1,5 +1,5 @@
-import telegram
 import hashlib
+import telegram
 
 
 class ReviewAdmin:

@@ -7,6 +7,8 @@ class DatabaseFake:
 		self.value = value
 
 	def get(self, name, default):
+		assert name
+		assert default
 		return self.value
 
 
