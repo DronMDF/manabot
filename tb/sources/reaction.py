@@ -30,6 +30,7 @@ class ReactionChoiced:
 		for r in self.reactions:
 			if r.check(update):
 				return r.react(update)
+		return None
 
 
 class ReactionAlways:
@@ -37,7 +38,7 @@ class ReactionAlways:
 		self.text = text
 
 	def check(self, update):
-		assert update
+		# pylint: disable=unused-argument
 		return True
 
 	def react(self, update):

@@ -52,18 +52,21 @@ class Style(Command):
 		# @todo #102 Постоянно выскакивает сообщение
 		#  'No config file found, using default configuration'
 		#  от него можно избавиться в теории, я пока не нашел подходов
+		# @todo #102 Вычистить wildcards-import
 		Run([
 			'--enable=all',
-			'--disable=mixed-indentation',
-			'--disable=missing-docstring',
 			'--disable=bad-continuation',
+			'--disable=broad-except',
+			'--disable=invalid-name',
+			'--disable=locally-disabled',
+			'--disable=missing-docstring',
+			'--disable=mixed-indentation',
 			'--disable=no-self-use',
 			'--disable=pointless-string-statement',
-			'--disable=broad-except',
+			'--disable=redefined-builtin',
+			'--disable=suppressed-message',
 			'--disable=too-few-public-methods',
 			'--disable=wildcard-import',
-			'--disable=invalid-name',
-			'--disable=redefined-builtin',
 			'--score=n',
 			filename
 		], reporter=self.reporter, exit=False)

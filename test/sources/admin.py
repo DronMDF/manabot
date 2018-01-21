@@ -7,8 +7,7 @@ class DatabaseFake:
 		self.value = value
 
 	def get(self, name, default):
-		assert name
-		assert default
+		# pylint: disable=unused-argument
 		return self.value
 
 
