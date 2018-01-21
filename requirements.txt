@@ -1,6 +1,5 @@
 codecov
 coverage
-distutils
 psutil
 pycodestyle
 pygerrit2

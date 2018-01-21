@@ -3,6 +3,7 @@
 import glob
 import sys
 import os
+# pylint: disable=no-name-in-module,import-error
 from distutils.core import setup, Command
 from unittest import TestLoader, TextTestRunner
 
