@@ -1,5 +1,5 @@
-import telegram
 import unittest
+import telegram
 from tb.sources.reaction import ReactionAlways
 from tb.sources.telegram import SoTelegram
 
@@ -28,6 +28,10 @@ class FakeBot:
 
 
 class FakeTransport:
+	def __init__(self):
+		self.chat_id = None
+		self.text = None
+
 	def sendMessage(self, chat_id, text):
 		self.chat_id = chat_id
 		self.text = text
