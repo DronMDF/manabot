@@ -1,6 +1,6 @@
 import hashlib
 import re
-from .action import *
+from .action import AcAdminAction, AcTelegramText
 
 
 class ReactionRestrict:

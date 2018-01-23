@@ -67,7 +67,7 @@ class Style(Command):
 			'--disable=redefined-builtin',
 			'--disable=suppressed-message',
 			'--disable=too-few-public-methods',
-			'--disable=wildcard-import',
+			'--disable=useless-suppression',
 			'--score=n',
 			filename
 		], reporter=self.reporter, exit=False)
